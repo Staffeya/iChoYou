@@ -1,21 +1,20 @@
-﻿from aiogram import Bot, Dispatcher, types
-from aiogram.utils import executor
-import os
+﻿import os
+from aiogram import Bot, Dispatcher
+from aiogram.filters import Command
+from aiogram.types import Message
+import asyncio
 
-# Токен вашего бота
-BOT_TOKEN = os.getenv("BOT_TOKEN")  # Переменная окружения для токена
+BOT_TOKEN = os.getenv("BOT_TOKEN", "ваш_токен_бота")
 
-if not BOT_TOKEN:
-    raise ValueError("Токен бота не найден. Проверьте переменные окружения Render.")
-
-# Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
 
-# Обработчик команды /start
-@dp.message_handler(commands=['start'])
-async def start_command(message: types.Message):
-    await message.answer("Привет! Бот успешно работает на Render.")
+@dp.message(Command("start"))
+async def start_command(message: Message):
+    await message.answer("Привет! Бот работает!")
+
+async def main():
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    executor.start_polling(dp)
+    asyncio.run(main())
